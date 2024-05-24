@@ -71,12 +71,14 @@ function initializeMap() {
         // 좌표에 대한 주소 정보 가져오기
         geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                var detailAddr = !!result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
+                var roadAddr = result[0].road_address ? result[0].road_address.address_name : '';
+                var jibunAddr = result[0].address ? result[0].address.address_name : '';
                 var pointInfo = {
                     no: pointsData.length + 1,
                     lat: latlng.getLat(),
                     lng: latlng.getLng(),
-                    address: detailAddr
+                    roadAddress: roadAddr,
+                    jibunAddress: jibunAddr
                 };
                 pointsData.push(pointInfo);
                 addRowToTable(pointInfo);
@@ -97,9 +99,10 @@ function initializeMap() {
     function addRowToTable(point) {
         var row = markerTableBody.insertRow();
         row.insertCell(0).innerText = point.no;
-        row.insertCell(1).innerText = point.address;
-        row.insertCell(2).innerText = point.lat;
-        row.insertCell(3).innerText = point.lng;
+        row.insertCell(1).innerText = point.roadAddress;
+        row.insertCell(2).innerText = point.jibunAddress;
+        row.insertCell(3).innerText = point.lat;
+        row.insertCell(4).innerText = point.lng;
     }
 
     // 테이블 업데이트 함수
@@ -113,13 +116,13 @@ function initializeMap() {
 
     // CSV 다운로드 함수
     window.downloadCSV = function() {
-        var csv = 'NO.,Address,Latitude,Longitude\n';
+        var csv = 'NO.,Road Address,Jibun Address,Latitude,Longitude\n';
         pointsData.forEach(function(point) {
-            csv += point.no + ',' + point.address + ',' + point.lat + ',' + point.lng + '\n';
+            csv += point.no + ',' + point.roadAddress + ',' + point.jibunAddress + ',' + point.lat + ',' + point.lng + '\n';
         });
 
         var hiddenElement = document.createElement('a');
-        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.href = 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURI(csv);  // UTF-8 BOM 추가
         hiddenElement.target = '_blank';
         hiddenElement.download = 'points_data.csv';
         hiddenElement.click();
