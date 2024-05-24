@@ -14,9 +14,7 @@ function initializeMap() {
     };
     var map = new kakao.maps.Map(mapContainer, mapOptions);
 
-    var ps = new kakao.maps.services.Places();
     var geocoder = new kakao.maps.services.Geocoder();
-
     var markers = [];
     var pointsData = [];
     var markerTableBody = document.getElementById('markerTable').getElementsByTagName('tbody')[0];
@@ -57,14 +55,12 @@ function initializeMap() {
 
         geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
             if (status === kakao.maps.services.Status.OK) {
-                var roadAddress = result[0].road_address ? result[0].road_address.address_name : '';
-                var jibunAddress = result[0].address ? result[0].address.address_name : '';
+                var detailAddr = !!result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
                 var pointInfo = {
                     no: pointsData.length + 1,
                     lat: latlng.getLat(),
                     lng: latlng.getLng(),
-                    roadAddress: roadAddress,
-                    jibunAddress: jibunAddress
+                    address: detailAddr
                 };
                 pointsData.push(pointInfo);
                 addRowToTable(pointInfo);
@@ -83,10 +79,9 @@ function initializeMap() {
     function addRowToTable(point) {
         var row = markerTableBody.insertRow();
         row.insertCell(0).innerText = point.no;
-        row.insertCell(1).innerText = point.roadAddress;
-        row.insertCell(2).innerText = point.jibunAddress;
-        row.insertCell(3).innerText = point.lat;
-        row.insertCell(4).innerText = point.lng;
+        row.insertCell(1).innerText = point.address;
+        row.insertCell(2).innerText = point.lat;
+        row.insertCell(3).innerText = point.lng;
     }
 
     function updateTable() {
@@ -98,9 +93,9 @@ function initializeMap() {
     }
 
     window.downloadCSV = function() {
-        var csv = 'NO.,Road Address,Jibun Address,Latitude,Longitude\n';
+        var csv = 'NO.,Address,Latitude,Longitude\n';
         pointsData.forEach(function(point) {
-            csv += point.no + ',' + point.roadAddress + ',' + point.jibunAddress + ',' + point.lat + ',' + point.lng + '\n';
+            csv += point.no + ',' + point.address + ',' + point.lat + ',' + point.lng + '\n';
         });
 
         var hiddenElement = document.createElement('a');
