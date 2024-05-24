@@ -44,7 +44,7 @@ function initializeMap() {
         markers.push(marker);
 
         kakao.maps.event.addListener(marker, 'click', function() {
-            removeMarker(marker);
+            removeMarker(marker, latlng);
         });
 
         geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
@@ -64,15 +64,16 @@ function initializeMap() {
         });
     }
 
-    function removeMarker(marker) {
-        var latlng = marker.getPosition();
+    function removeMarker(marker, latlng) {
         marker.setMap(null);
 
-        // 마커 배열에서 삭제
+        // markers 배열에서 마커 삭제
         markers = markers.filter(m => !m.getPosition().equals(latlng));
 
-        // 테이블에서 삭제
+        // pointsData 배열에서 관련 데이터 삭제
         pointsData = pointsData.filter(point => point.lat !== latlng.getLat() || point.lng !== latlng.getLng());
+
+        // 테이블 업데이트
         updateTable();
     }
 
