@@ -73,6 +73,18 @@ function initializeMap() {
         // pointsData 배열에서 관련 데이터 삭제
         pointsData = pointsData.filter(point => point.lat !== latlng.getLat() || point.lng !== latlng.getLng());
 
+        // 테이블에서 해당 행 삭제
+        var rows = markerTableBody.getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; i++) {
+            var row = rows[i];
+            var lat = parseFloat(row.getAttribute('data-lat'));
+            var lng = parseFloat(row.getAttribute('data-lng'));
+            if (lat === latlng.getLat() && lng === latlng.getLng()) {
+                markerTableBody.deleteRow(i);
+                break;
+            }
+        }
+
         // 테이블 업데이트
         updateTable();
     }
