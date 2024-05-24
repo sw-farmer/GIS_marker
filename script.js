@@ -30,7 +30,7 @@ function initializeMap() {
                 alert('주소를 찾을 수 없습니다.');
             }
         });
-    }
+    };
 
     kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
         var latlng = mouseEvent.latLng;
@@ -112,9 +112,9 @@ function initializeMap() {
         });
 
         var hiddenElement = document.createElement('a');
-        hiddenElement.href = 'data:text/csv;charset=utf-8' + encodeURI(csv);
+        hiddenElement.href = 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURI(csv);
         hiddenElement.target = '_blank';
         hiddenElement.download = 'points_data.csv';
         hiddenElement.click();
-    }
+    };
 }
