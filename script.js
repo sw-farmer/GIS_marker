@@ -67,7 +67,11 @@ function initializeMap() {
     function removeMarker(marker) {
         var latlng = marker.getPosition();
         marker.setMap(null);
+
+        // 마커 배열에서 삭제
         markers = markers.filter(m => !m.getPosition().equals(latlng));
+
+        // 테이블에서 삭제
         pointsData = pointsData.filter(point => point.lat !== latlng.getLat() || point.lng !== latlng.getLng());
         updateTable();
     }
@@ -98,7 +102,7 @@ function initializeMap() {
         });
 
         var hiddenElement = document.createElement('a');
-        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.href = 'data:text/csv;charset=euc-kr,' + encodeURI(csv);
         hiddenElement.target = '_blank';
         hiddenElement.download = 'points_data.csv';
         hiddenElement.click();
