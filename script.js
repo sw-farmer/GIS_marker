@@ -48,34 +48,50 @@ function initializeMap() {
 
         if (existingMarker) {
             // 마커가 존재하면 삭제
-            existingMarker.setMap(null);
-            markers = markers.filter(marker => !marker.getPosition().equals(latlng));
-            pointsData = pointsData.filter(point => point.lat !== latlng.getLat() && point.lng !== latlng.getLng());
-            updateTable();
+            removeMarker(existingMarker);
         } else {
             // 마커가 존재하지 않으면 생성
-            var marker = new kakao.maps.Marker({
-                position: latlng
-            });
-            marker.setMap(map);
-            markers.push(marker);
-
-            // 좌표에 대한 주소 정보 가져오기
-            geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    var detailAddr = !!result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
-                    var pointInfo = {
-                        no: pointsData.length + 1,
-                        lat: latlng.getLat(),
-                        lng: latlng.getLng(),
-                        address: detailAddr
-                    };
-                    pointsData.push(pointInfo);
-                    addRowToTable(pointInfo);
-                }
-            });
+            addMarker(latlng);
         }
     });
+
+    // 마커 추가 함수
+    function addMarker(latlng) {
+        var marker = new kakao.maps.Marker({
+            position: latlng
+        });
+        marker.setMap(map);
+        markers.push(marker);
+
+        // 마커 클릭 이벤트 추가 (클릭 시 마커 삭제)
+        kakao.maps.event.addListener(marker, 'click', function() {
+            removeMarker(marker);
+        });
+
+        // 좌표에 대한 주소 정보 가져오기
+        geocoder.coord2Address(latlng.getLng(), latlng.getLat(), function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var detailAddr = !!result[0].road_address ? result[0].road_address.address_name : result[0].address.address_name;
+                var pointInfo = {
+                    no: pointsData.length + 1,
+                    lat: latlng.getLat(),
+                    lng: latlng.getLng(),
+                    address: detailAddr
+                };
+                pointsData.push(pointInfo);
+                addRowToTable(pointInfo);
+            }
+        });
+    }
+
+    // 마커 제거 함수
+    function removeMarker(marker) {
+        var latlng = marker.getPosition();
+        marker.setMap(null);
+        markers = markers.filter(m => !m.getPosition().equals(latlng));
+        pointsData = pointsData.filter(point => point.lat !== latlng.getLat() || point.lng !== latlng.getLng());
+        updateTable();
+    }
 
     // 테이블에 행 추가 함수
     function addRowToTable(point) {
