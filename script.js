@@ -33,13 +33,7 @@ function initializeMap() {
 
     kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
         var latlng = mouseEvent.latLng;
-        var existingMarker = markers.find(marker => marker.getPosition().equals(latlng));
-
-        if (existingMarker) {
-            removeMarker(existingMarker);
-        } else {
-            addMarker(latlng);
-        }
+        addMarker(latlng);
     });
 
     function addMarker(latlng) {
@@ -104,7 +98,4 @@ function initializeMap() {
         var hiddenElement = document.createElement('a');
         hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
         hiddenElement.target = '_blank';
-        hiddenElement.download = 'points_data.csv';
-        hiddenElement.click();
-    }
-}
+        hiddenElement.download = 'points_da
