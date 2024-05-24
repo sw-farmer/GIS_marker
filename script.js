@@ -112,7 +112,7 @@ function initializeMap() {
         });
 
         var hiddenElement = document.createElement('a');
-        hiddenElement.href = 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURI(csv);
+        hiddenElement.href = 'data:text/csv;charset=utf-8' + encodeURI(csv);
         hiddenElement.target = '_blank';
         hiddenElement.download = 'points_data.csv';
         hiddenElement.click();
