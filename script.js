@@ -74,6 +74,8 @@ function initializeMap() {
 
     function addRowToTable(point) {
         var row = markerTableBody.insertRow();
+        row.setAttribute('data-lat', point.lat);
+        row.setAttribute('data-lng', point.lng);
         row.insertCell(0).innerText = point.no;
         row.insertCell(1).innerText = point.roadAddress;
         row.insertCell(2).innerText = point.jibunAddress;
@@ -98,4 +100,7 @@ function initializeMap() {
         var hiddenElement = document.createElement('a');
         hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
         hiddenElement.target = '_blank';
-        hiddenElement.download = 'points_da
+        hiddenElement.download = 'points_data.csv';
+        hiddenElement.click();
+    }
+}
